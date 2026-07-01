@@ -3,11 +3,8 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-from imblearn.over_sampling import SMOTE
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN & THEME
