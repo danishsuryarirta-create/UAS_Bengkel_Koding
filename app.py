@@ -147,22 +147,15 @@ def load_artifacts():
 
 model, scaler, selected_features, artifacts_loaded = load_artifacts()
 
-if not artifacts_loaded:
-    st.sidebar.warning("⚠️ Berkas `.pkl` tidak ditemukan. Aplikasi berjalan dalam **Mode Demo (Simulasi Prediksi)**.")
-
 # ==============================================================================
 # 4. NAVIGASI SIDEBAR
 # ==============================================================================
 st.sidebar.title("🧭 Menu Navigasi")
 menu = st.sidebar.radio("Pilih Mode Prediksi:", ["Prediksi Individu", "Prediksi Batch (CSV File)"])
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 📊 Informasi Model")
-if artifacts_loaded:
-    st.sidebar.success("✅ Berkas pkl sukses dimuat")
-    st.sidebar.info(f"✨ Jumlah Fitur Terpilih: {len(selected_features)} kolom")
-else:
-    st.sidebar.code("Status: Berjalan tanpa pkl asli")
+# Jika file pkl tidak ditemukan, tetap tampilkan peringatan tersembunyi di sidebar tanpa metrik informasi
+if not artifacts_loaded:
+    st.sidebar.warning("⚠️ Berkas `.pkl` tidak ditemukan. Aplikasi berjalan dalam Mode Demo.")
 
 # ==============================================================================
 # 5. MODE 1: PREDIKSI INDIVIDU VIA FORMULIR
@@ -254,7 +247,7 @@ if menu == "Prediksi Individu":
                 st.write("- 🛠️ **Evaluasi Tiket Masalah:** Segera selesaikan sisa pengaduan tiket komplain user.")
                 st.write("- 🎁 **Insentif Khusus:** Kirimkan voucher penawaran personal/diskon khusus.")
             else:
-                st.write("- 🌟 **Menjaga Loyalitas:** Tetap pertahankan pelayanan prima demi kepuasan berkelanjutan.")
+                st.write("- 🌟 **Menjaga Loyalitas:** Tetap pertahaman pelayanan prima demi kepuasan berkelanjutan.")
                 st.write("- 🚀 **Rekomendasi Up-selling:** Tawarkan promosi peningkatan paket langganan ke tipe tahunan (*Annual*).")
 
 # ==============================================================================
@@ -323,6 +316,8 @@ elif menu == "Prediksi Batch (CSV File)":
                     # Tampilkan data hasil prediksi dalam bentuk dataframe interaktif
                     display_cols = ['customer_id', 'Status_Pelanggan', 'Probabilitas_Churn'] if 'customer_id' in df_batch.columns else ['Status_Pelanggan', 'Probabilitas_Churn']
                     remaining_cols = [c for c in df_batch.columns if c not in display_cols]
+                    
+                    # Gunakan seluruh fitur latih sebagai visualisasi tabel jika model termuat
                     st.dataframe(df_batch[display_cols + remaining_cols].head(50))
                     
                     # Sediakan tombol download berkas hasil prediksi baru
